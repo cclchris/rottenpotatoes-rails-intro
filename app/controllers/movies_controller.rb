@@ -1,4 +1,13 @@
 class MoviesController < ApplicationController
+    helper_method :helper_class
+    
+    def helper_class(field)
+      if(params[:short].to_s == field)
+        return 'hilite'
+      else 
+        return nil
+      end
+    end
 
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
@@ -11,7 +20,13 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    if(params[:title_header])
+      @movies = Movie.order(:title)
+    elsif(params[:release_date_header])
+      @movies = Movie.order(:release_date)
+    else
+      @movies = Movie.all
+    end
   end
 
   def new
